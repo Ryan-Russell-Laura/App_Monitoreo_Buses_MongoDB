@@ -1,0 +1,228 @@
+ESTRUCTURA COMPLETA - MONITOREO DE RUTAS DE BUSES
+================================================
+
+📦 CARPETA RAÍZ: proyecto/
+│
+├── 📂 server/ (Backend Node.js/Express)
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── database.js (Conexión MongoDB)
+│   │   ├── middleware/
+│   │   │   └── auth.js (Verificación JWT)
+│   │   ├── models/
+│   │   │   ├── Usuario.js (Schema Usuario + encriptación)
+│   │   │   ├── Bus.js (Schema Bus)
+│   │   │   ├── Ruta.js (Schema Ruta)
+│   │   │   └── ViajeDiario.js (Schema ViajeDiario + sub-schemas)
+│   │   ├── routes/
+│   │   │   ├── auth.js (POST /register, POST /login)
+│   │   │   ├── buses.js (GET, POST buses)
+│   │   │   ├── rutas.js (GET, POST rutas)
+│   │   │   └── viajeDiario.js (CRUD completo: POST, GET, PUT, DELETE)
+│   │   └── server.js (Express server principal)
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── package.json
+│   └── README.md
+│
+├── 📂 client/ (Frontend React + TypeScript)
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── ViajeDiarioForm.tsx (Formulario CREATE/EDIT viajes)
+│   │   ├── context/
+│   │   │   └── AuthContext.tsx (Gestión autenticación)
+│   │   ├── pages/
+│   │   │   ├── Login.tsx (Login + Register)
+│   │   │   ├── Dashboard.tsx (Página principal)
+│   │   │   ├── Monitoreo.tsx (CRUD viajes + filtros)
+│   │   │   └── Buses.tsx (Gestión buses)
+│   │   ├── api.ts (Utilidad llamadas API)
+│   │   ├── types.ts (Tipos TypeScript)
+│   │   ├── router.ts (Rutas de navegación)
+│   │   ├── index.css (Estilos Tailwind)
+│   │   ├── App.tsx (Componente principal)
+│   │   ├── main.tsx (Entry point)
+│   │   └── vite-env.d.ts (Tipos Vite)
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── package.json
+│   └── README.md
+│
+├── 📄 README_INSTRUCCIONES.md (GUÍA DE INSTALACIÓN COMPLETA)
+├── 📄 ARQUITECTURA.md (Diagramas y flujos del sistema)
+└── 📄 ESTRUCTURA_PROYECTO.txt (Este archivo)
+
+
+CARACTERÍSTICAS IMPLEMENTADAS
+=============================
+
+✅ AUTENTICACIÓN JWT
+   - Registro de usuarios con rol (Admin, Programador, Conductor)
+   - Login seguro con contraseñas encriptadas (bcryptjs 10 rounds)
+   - Token JWT con expiración 24h
+   - Verificación en todas las rutas protegidas
+
+✅ 4 SCHEMAS MONGOOSE
+   1. USUARIO: nombre, email (único), password (hash), rol
+   2. BUS: placa (única), modelo, capacidad, mantenimiento
+   3. RUTA: nombreRuta, origen, destino, duracionEstimada
+   4. VIAJE_DIARIO: rutaId, busId, conductorId, + 2 sub-schemas
+
+✅ DOCUMENTOS ANIDADOS (NoSQL)
+   - horario: {salidaProgramada, salidaReal, llegadaProgramada, llegadaReal}
+   - monitoreoCombustible: {nivelInicial, nivelFinal, consumo}
+
+✅ CRUD COMPLETO VIAJE_DIARIO
+   - POST /api/viajes-diarios - Crear
+   - GET /api/viajes-diarios - Listar todos
+   - GET /api/viajes-diarios/:id - Obtener uno
+   - PUT /api/viajes-diarios/:id - Actualizar
+   - DELETE /api/viajes-diarios/:id - Eliminar
+
+✅ CRUD SIMPLE
+   - Buses: GET, POST
+   - Rutas: GET, POST
+
+✅ FRONTEND RESPONSIVE
+   - Mobile: < 640px
+   - Tablet: 640px - 1024px
+   - Desktop: > 1024px
+
+✅ FUNCIONALIDADES ADICIONALES
+   - Filtros por fecha, ruta, conductor
+   - Selectores dinámicos en formularios
+   - Validación frontend y backend
+   - Manejo de errores
+   - Interfaz intuitiva con Tailwind CSS
+   - Iconos con Lucide React
+
+
+STACK TECNOLÓGICO
+=================
+
+FRONTEND:
+- React 18.3.1
+- TypeScript 5.5.3
+- Tailwind CSS 3.4.1
+- Lucide React 0.344.0
+- Vite 5.4.2
+
+BACKEND:
+- Node.js 18+
+- Express 4.18.2
+- Mongoose 8.0.3
+- JWT (jsonwebtoken 9.1.2)
+- bcryptjs 2.4.3
+- CORS 2.8.5
+
+BASE DE DATOS:
+- MongoDB (Atlas) con schemas Mongoose
+- Collections: usuarios, buses, rutas, viajesdiarios
+
+
+ENDPOINTS API
+=============
+
+AUTENTICACIÓN (SIN JWT):
+POST /api/auth/register
+  Body: {nombre, email, password, rol}
+
+POST /api/auth/login
+  Body: {email, password}
+  Response: {token, usuario}
+
+PROTEGIDOS (REQUIEREN JWT):
+
+BUSES:
+GET /api/buses
+POST /api/buses {placa, modelo, capacidad, mantenimiento}
+
+RUTAS:
+GET /api/rutas
+POST /api/rutas {nombreRuta, origen, destino, duracionEstimada}
+
+VIAJES DIARIOS (CRUD):
+POST /api/viajes-diarios
+  Body: {rutaId, busId, conductorId, horario, monitoreoCombustible, estado, observaciones}
+
+GET /api/viajes-diarios
+GET /api/viajes-diarios/:id
+
+PUT /api/viajes-diarios/:id
+  Body: campos a actualizar
+
+DELETE /api/viajes-diarios/:id
+
+
+VARIABLES DE ENTORNO
+====================
+
+SERVIDOR (.env):
+MONGO_URI=mongodb+srv://usuario:password@cluster.mongodb.net/monitoreo_buses
+JWT_SECRET=tu_secret_key_muy_seguro_2024
+PORT=5000
+NODE_ENV=development
+
+CLIENTE (.env):
+VITE_API_URL=http://localhost:5000/api
+
+
+INSTALACIÓN RÁPIDA
+==================
+
+1. BACKEND:
+   cd server
+   npm install
+   cp .env.example .env
+   (Editar .env con MongoDB URI)
+   npm run dev
+
+2. FRONTEND (en otra terminal):
+   cd client
+   npm install
+   cp .env.example .env
+   npm run dev
+
+3. ACCEDER:
+   http://localhost:3000
+
+
+ARCHIVOS IMPORTANTES
+====================
+
+📌 README_INSTRUCCIONES.md → GUÍA PASO A PASO PARA INSTALAR
+📌 ARQUITECTURA.md → Diagramas y flujos técnicos
+📌 server/README.md → Documentación backend
+📌 client/README.md → Documentación frontend
+
+
+SEGURIDAD
+=========
+
+✅ Contraseñas encriptadas con bcryptjs (10 rounds)
+✅ JWT con expiración
+✅ CORS configurado
+✅ Validación en frontend y backend
+✅ Middleware de autenticación
+✅ Manejo de errores seguro
+
+
+NOTAS IMPORTANTES
+=================
+
+1. Este proyecto está LISTO PARA DESCARGAR
+2. NO necesita cambios de configuración en el código
+3. Solo necesita:
+   - MongoDB Atlas URI en .env del servidor
+   - npm install en ambas carpetas
+   - npm run dev en ambas carpetas
+
+4. Puedes usar Postman para probar los endpoints
+5. Todos los modelos tienen timestamps (createdAt, updatedAt)
+6. El populate() automático en viajes trae datos completos
