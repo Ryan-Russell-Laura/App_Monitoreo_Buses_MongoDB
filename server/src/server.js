@@ -17,7 +17,7 @@ connectDB();
 // 1. Define los orígenes permitidos
 const allowedOrigins = [
     'http://localhost:5173', // Para desarrollo local
-    'https://app-monitoreo-buses-frontend.netlify.app/' // <<-- ¡PEGA AQUÍ TU URL DE NETLIFY!
+    'https://app-monitoreo-buses-frontend.netlify.app' // <<-- ¡PEGA AQUÍ TU URL DE NETLIFY!
 ];
 
 // 2. Aplica la configuración de CORS
