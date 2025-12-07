@@ -13,7 +13,20 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+// INICIO DEL CAMBIO CRÍTICO DE CORS
+// 1. Define los orígenes permitidos
+const allowedOrigins = [
+    'http://localhost:5173', // Para desarrollo local
+    'https://app-monitoreo-buses-frontend.netlify.app/' // <<-- ¡PEGA AQUÍ TU URL DE NETLIFY!
+];
+
+// 2. Aplica la configuración de CORS
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true, // Esto es CRUCIAL si manejas tokens de autorización
+}));
+// FIN DEL CAMBIO CRÍTICO DE CORS
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
